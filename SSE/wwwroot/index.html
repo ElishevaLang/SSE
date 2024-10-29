@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Updates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .time-box {
+            margin: 10px 0;
+            font-size: 18px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Live Time Updates</h1>
+        <div id="times"></div>
+    </div>
+
+    <script>
+        const eventSource = new EventSource('/api/sse/time');
+        eventSource.onmessage = function(event) {
+            const times = JSON.parse(event.data);
+            const timesContainer = document.getElementById('times');
+            timesContainer.innerHTML = '';
+
+            times.forEach(timeData => {
+                const timeBox = document.createElement('div');
+                timeBox.className = 'time-box';
+                timeBox.innerText = `${timeData.Country}: ${timeData.Time}`;
+                timesContainer.appendChild(timeBox);
+            });
+        };
+    </script>
+</body>
+</html>
+
